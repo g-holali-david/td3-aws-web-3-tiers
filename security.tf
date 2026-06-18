@@ -76,8 +76,3 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-# NB : pas de SG "rds" ici — le RDS est PARTAGE et gere ailleurs (td-ipssi-rds-v2).
-# Son propre Security Group controle l'acces 5432 ; il est publiquement accessible,
-# donc nos EC2 app le joignent via leur sortie NAT. La chaine du moindre privilege
-# que NOUS gerons s'arrete au tier app (alb-public -> web -> alb-internal -> app).

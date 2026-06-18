@@ -20,8 +20,8 @@ Internet → ALB public → tier WEB (Flask form) → ALB interne → tier APP (
 | Fichier | Rôle |
 |---------|------|
 | `providers.tf` | provider AWS `~> 5.0` |
-| `variables.tf` | région, AZ, CIDR des 8 subnets (aucun secret en clair) |
-| `network.tf` | VPC, 8 subnets (public/web/app/data ×2 AZ), IGW, **2 NAT**, routes |
+| `variables.tf` | région, AZ, CIDR des 6 subnets (aucun secret en clair) |
+| `network.tf` | VPC par défaut + IGW existante (data sources), 6 subnets (public/web/app ×2 AZ), **2 NAT**, routes |
 | `security.tf` | chaîne de SG (alb-public → web → alb-internal → app) |
 | `data.tf` | **data sources** : RDS partagé + secret Secrets Manager |
 | `app_tier.tf` | AMI, **ALB interne**, TG app, 2 EC2 app (creds lus du secret) |
@@ -67,7 +67,7 @@ SG-app          : 80 depuis SG-alb-internal
 ```
 Le SG du RDS partagé (port 5432) est géré côté `td-ipssi-rds-v2` (hors de notre stack).
 
-## ⚠️ Coûts & quotas (compte partagé)
+## Coûts & quotas (compte partagé)
 
 - **NAT Gateways et ALB facturés à l'heure** → `make tr_d` **obligatoire** en fin de séance.
 - Cette archi consomme **4 EC2 (8 vCPU) + 2 NAT + 2 EIP + 2 ALB** (le RDS, lui, est partagé →
