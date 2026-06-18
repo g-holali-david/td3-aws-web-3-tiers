@@ -1,0 +1,25 @@
+# Variables d'environnement (secrets) - on garde l'exemple
+.env
+!.env.example
+
+# Cles SSH
+*.pem
+
+
+# --- Terraform ---
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# NB : .terraform.lock.hcl DOIT etre versionne
