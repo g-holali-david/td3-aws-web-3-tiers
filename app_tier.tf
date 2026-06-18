@@ -10,7 +10,7 @@ data "aws_ami" "al2023" {
 
 # --- ALB INTERNE (entre le tier web et le tier app) ---
 resource "aws_lb" "internal" {
-  name               = "td-alb-internal"
+  name               = "${var.name_prefix}-alb-internal"
   internal           = true # ALB INTERNE : IP privees uniquement
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_internal.id]
@@ -18,10 +18,10 @@ resource "aws_lb" "internal" {
 }
 
 resource "aws_lb_target_group" "app" {
-  name     = "td-tg-app"
+  name     = "${var.name_prefix}-tg-app"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
+  vpc_id   = data.aws_vpc.default.id
   health_check {
     path                = "/health"
     matcher             = "200"
@@ -57,8 +57,9 @@ resource "aws_instance" "app" {
     db_password = local.rds_creds.password
     app_code    = file("${path.module}/app/app.py")
   })
+  user_data_replace_on_change = true # re-deploie le code quand app.py change
 
-  tags = { Name = "td-app-${count.index}" }
+  tags = { Name = "${var.name_prefix}-app-${count.index}" }
 }
 
 # Rattacher chaque instance "app" au target group "app"

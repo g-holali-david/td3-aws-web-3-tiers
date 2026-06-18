@@ -10,4 +10,12 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
+
+  # Tag applique automatiquement a TOUTES les ressources -> le prof identifie le groupe
+  default_tags {
+    tags = {
+      Groupe = "dany-david"
+      TD     = "td3-3tiers"
+    }
+  }
 }

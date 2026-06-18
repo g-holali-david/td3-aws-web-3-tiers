@@ -2,8 +2,8 @@
 # QUE de la couche situee juste au-dessus d'elle.
 
 resource "aws_security_group" "alb_public" {
-  name   = "td-sg-alb-public"
-  vpc_id = aws_vpc.main.id
+  name   = "${var.name_prefix}-sg-alb-public"
+  vpc_id = data.aws_vpc.default.id
 
   ingress {
     description = "HTTP depuis Internet"
@@ -21,11 +21,11 @@ resource "aws_security_group" "alb_public" {
 }
 
 resource "aws_security_group" "web" {
-  name   = "td-sg-web"
-  vpc_id = aws_vpc.main.id
+  name   = "${var.name_prefix}-sg-web"
+  vpc_id = data.aws_vpc.default.id
 
   ingress {
-    description     = "HTTP depuis l'ALB public uniquement"
+    description     = "HTTP depuis ALB public uniquement"
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
@@ -40,8 +40,8 @@ resource "aws_security_group" "web" {
 }
 
 resource "aws_security_group" "alb_internal" {
-  name   = "td-sg-alb-internal"
-  vpc_id = aws_vpc.main.id
+  name   = "${var.name_prefix}-sg-alb-internal"
+  vpc_id = data.aws_vpc.default.id
 
   ingress {
     description     = "HTTP depuis le tier web uniquement"
@@ -59,11 +59,11 @@ resource "aws_security_group" "alb_internal" {
 }
 
 resource "aws_security_group" "app" {
-  name   = "td-sg-app"
-  vpc_id = aws_vpc.main.id
+  name   = "${var.name_prefix}-sg-app"
+  vpc_id = data.aws_vpc.default.id
 
   ingress {
-    description     = "HTTP depuis l'ALB interne uniquement"
+    description     = "HTTP depuis ALB interne uniquement"
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"

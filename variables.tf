@@ -7,31 +7,29 @@ variable "azs" {
   default = ["eu-west-3a", "eu-west-3b"]
 }
 
-variable "vpc_cidr" {
-  default = "10.0.0.0/16"
+# Prefixe des noms (unique par etudiant : evite les collisions de noms
+# SG / ALB / TG dans le VPC par defaut PARTAGE).
+variable "name_prefix" {
+  default = "td3-dany-david"
 }
 
-# CIDR des 4 paires de subnets (public, web, app, data) repartis sur 2 AZ.
+# CIDR des subnets, dans le VPC par defaut (172.31.0.0/16).
+# Plages choisies libres au moment du TD (verifier qu'aucun camarade ne les prend).
 variable "public_subnet_cidrs" {
   type    = list(string)
-  default = ["10.0.0.0/24", "10.0.1.0/24"]
+  default = ["172.31.110.0/24", "172.31.111.0/24"]
 }
 
 variable "web_subnet_cidrs" {
   type    = list(string)
-  default = ["10.0.10.0/24", "10.0.11.0/24"]
+  default = ["172.31.112.0/24", "172.31.113.0/24"]
 }
 
 variable "app_subnet_cidrs" {
   type    = list(string)
-  default = ["10.0.20.0/24", "10.0.21.0/24"]
+  default = ["172.31.114.0/24", "172.31.115.0/24"]
 }
 
-variable "data_subnet_cidrs" {
-  type    = list(string)
-  default = ["10.0.30.0/24", "10.0.31.0/24"]
-}
-
-# NB : pas de variable db_username / db_password / db_name : les identifiants de
-# la base proviennent du secret AWS Secrets Manager "td-ipssi-rds-v2/password"
-# (cf. data.tf -> local.rds_creds).
+# NB : pas de subnets "data" ni de variable db_* : le tier donnees est le RDS
+# PARTAGE (td-ipssi-rds-v2), lu via data source, identifiants depuis Secrets
+# Manager (cf. data.tf -> local.rds_creds).

@@ -1,6 +1,6 @@
 # --- ALB PUBLIC (devant le tier web) ---
 resource "aws_lb" "public" {
-  name               = "td-alb-public"
+  name               = "${var.name_prefix}-alb-public"
   internal           = false # ALB PUBLIC : internet-facing
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_public.id]
@@ -8,10 +8,10 @@ resource "aws_lb" "public" {
 }
 
 resource "aws_lb_target_group" "web" {
-  name     = "td-tg-web"
+  name     = "${var.name_prefix}-tg-web"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.main.id
+  vpc_id   = data.aws_vpc.default.id
   health_check {
     path                = "/health"
     matcher             = "200"
@@ -44,8 +44,9 @@ resource "aws_instance" "web" {
     internal_alb_dns = aws_lb.internal.dns_name # le tier web parle a l'ALB interne
     web_code         = file("${path.module}/web/web.py")
   })
+  user_data_replace_on_change = true # re-deploie le code quand web.py change
 
-  tags = { Name = "td-web-${count.index}" }
+  tags = { Name = "${var.name_prefix}-web-${count.index}" }
 }
 
 # Rattacher chaque instance "web" au target group "web"
