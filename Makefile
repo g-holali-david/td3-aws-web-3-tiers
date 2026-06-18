@@ -3,7 +3,7 @@ SHELL := C:/PROGRA~1/Git/bin/bash.exe
 .SHELLFLAGS := -c
 endif
 
--include .env      # charge .env (TF_VAR_db_password, etc.)
+-include .env      
 export
 
 .DEFAULT_GOAL := help
